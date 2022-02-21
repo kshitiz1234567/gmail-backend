@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users{
+  username       String       @id
+  first_name     String
+  last_name      String
+  passward       String
+  phone_number   String
+  recovery_email String?
+  birth_date     DateTime     @db.Date
+  sex            Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  messages       messages[]
+  messages_mapping messages_mapping[]
+}
+
+model messages{
+  messageId       String       @id @default(uuid())
+  subject         String?
+  body            String?       
+  authorName      String
+  recipientName   String[]
+  Cc              String[]
+  Bcc             String[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  Users           Users? @relation(fields: [authorName], references: [username], onDelete: NoAction, onUpdate: NoAction)
+  messages_mapping messages_mapping[]      
+}
+
+model messages_mapping{
+  mappingId     String        @id @default(uuid())
+  username      String        
+  messageId     String        
+  attribute     String
+  isRead        Boolean
+  isStarred     Boolean
+  time          DateTime      @db.Timestamp()
+  messages      messages? @relation(fields: [messageId], references: [messageId], onDelete: NoAction, onUpdate: NoAction)
+  Users         Users? @relation(fields: [username], references: [username], onDelete: NoAction, onUpdate: NoAction)
+}
+

@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Development'
+      name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
@@ -51,6 +51,6 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'gmail-backend'
-          slot-name: 'Development'
+          slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9B524953C1A546E9A3826E0B8D9E1269 }}
           package: .
